@@ -13,3 +13,25 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  profileId Int?     @unique
+  profile   Profile? @relation(fields: [profileId], references: [id])
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  name   String
+  avatar String? @default("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png")
+  gender Gender?
+  user   User?
+  userId Int
+}
+
+enum Gender {
+  Male
+  Female
+}
