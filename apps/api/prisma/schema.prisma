@@ -19,8 +19,7 @@ model User {
   id         Int       @id @default(autoincrement())
   email      String    @unique
   password   String
-  profileId  Int?      @unique
-  profile    Profile?  @relation(fields: [profileId], references: [id])
+  profile    Profile?
   AssignedTo Task[]    @relation("AssignedTo")
   TaskOwner  Task[]    @relation("TaskOwner")
   subtask    SubTask[]
@@ -32,8 +31,8 @@ model Profile {
   name   String
   avatar String? @default("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png")
   gender Gender?
-  user   User?
-  userId Int
+  user   User?   @relation(fields: [userId], references: [id])
+  userId Int?    @unique
 }
 
 enum Gender {
@@ -59,8 +58,8 @@ model Task {
 //! Sub task
 model SubTask {
   id        Int      @id @default(autoincrement())
-  taskId    Int?
-  task      Task?    @relation(fields: [taskId], references: [id])
+  taskId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   assigned  User     @relation(fields: [userId], references: [id])
